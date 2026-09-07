@@ -11,7 +11,7 @@
 #include "list.h"
 
 /*getNode helper allocation*/
-static node_t *getNode(elem value) {
+node_t *getNode(elem value) {
   node_t *node = (node_t *)malloc(sizeof(node_t));
   if (node != NULL) {
     node->value = value;
@@ -51,6 +51,12 @@ void list_print(list_t *l) {
 
 char * listToString(list_t *l) {
   char* buf = (char *) malloc(sizeof(char) * 10024);
+  if (buf == NULL) return NULL;
+  buf[0] = '\0';
+  if (l == NULL || l->head == NULL) {
+    strcpy(buf, "NULL");
+    return buf;
+  }
   char tbuf[20];
 
 	node_t* curr = l->head;
@@ -99,15 +105,6 @@ void list_add_to_front(list_t *l, elem value) {
     l->head = new_node;
 }
 
-node_t * getNode(elem value) {
-  node_t *mynode;
-
-  mynode = (node_t *) malloc(sizeof(node_t));
-  mynode->value = value;
-  mynode->next = NULL;
-
-  return mynode;
-}
 
 void list_add_at_index(list_t *l, elem value, int index) {
   if (l == NULL || index < 0) return;
