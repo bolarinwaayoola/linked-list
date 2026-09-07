@@ -2,7 +2,7 @@
 // 
 // Implementation for linked list.
 //
-// <Author>
+// Bolarinwa Ayoola
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,23 +43,25 @@ void list_print(list_t *l) {
   if (l==NULL) return;
   node_t *curr = l->head;
   while (curr != NULL) {
-    printf("%d ->", curr->value);
+    printf("%d -> ", curr->value);
     curr = curr->next; 
   }
   printf("NULL\n");
 }
 
 char * listToString(list_t *l) {
-  char* buf = (char *) malloc(sizeof(char) * 10024);
-  if (buf == NULL) return NULL;
-  buf[0] = '\0';
   if (l == NULL || l->head == NULL) {
-    strcpy(buf, "NULL");
+    char *buf = (char *) malloc(sizeof(char) * 5);
+    if (buf != NULL) strcpy(buf, "NULL");
     return buf;
   }
+  int len = list_length(l);
+  char* buf = (char *) malloc(sizeof(char) * ((len * 15) + 10));
+  if (buf == NULL) return NULL;
+  buf[0] = '\0';
   char tbuf[20];
 
-	node_t* curr = l->head;
+  node_t* curr = l->head;
   while (curr != NULL) {
     sprintf(tbuf, "%d->", curr->value);
     curr = curr->next;
@@ -105,20 +107,19 @@ void list_add_to_front(list_t *l, elem value) {
     l->head = new_node;
 }
 
-
 void list_add_at_index(list_t *l, elem value, int index) {
-  if (l == NULL || index < 0) return;
-  if (index == 0) {
+  if (l == NULL || index < 1) return;
+  if (index == 1) {
     list_add_to_front(l, value);
     return;
   }
 
   node_t *curr = l->head;
-  for (int i = 0; curr != NULL && i < index - 1; i++) {
+  for (int i = 1; curr != NULL && i < index - 1; i++) {
     curr = curr->next;
   }
 
-  if (curr == NULL) return; // Index out of bounds
+  if (curr == NULL) return;
 
   node_t *new_node = getNode(value);
   if (new_node == NULL) return;
@@ -160,15 +161,15 @@ elem list_remove_from_front(list_t *l) {
 }
 
 elem list_remove_at_index(list_t *l, int index) {
-  if (l == NULL || l->head == NULL || index < 0) return -1;
-  if (index == 0) return list_remove_from_front(l);
+  if (l == NULL || l->head == NULL || index < 1) return -1;
+  if (index == 1) return list_remove_from_front(l);
 
   node_t *curr = l->head;
-  for (int i = 0; curr->next != NULL && i < index - 1; i++) {
+  for (int i = 1; curr->next != NULL && i < index - 1; i++) {
     curr = curr->next;
   }
 
-  if (curr->next == NULL) return -1; // Out of bounds
+  if (curr->next == NULL) return -1;
 
   node_t *temp = curr->next;
   elem val = temp->value;
@@ -188,9 +189,9 @@ bool list_is_in(list_t *l, elem value) {
 }
 
 elem list_get_elem_at(list_t *l, int index) {
-  if (l == NULL || index < 0) return -1;
+  if (l == NULL || index < 1) return -1;
   node_t *curr = l->head;
-  for (int i = 0; curr != NULL && i < index; i++) {
+  for (int i = 1; curr != NULL && i < index; i++) {
     curr = curr->next;
   }
   return (curr != NULL) ? curr->value : -1;
@@ -199,7 +200,7 @@ elem list_get_elem_at(list_t *l, int index) {
 int list_get_index_of(list_t *l, elem value) {
   if (l == NULL) return -1;
   node_t *curr = l->head;
-  int idx = 0;
+  int idx = 1;
   while (curr != NULL) {
     if (curr->value == value) return idx;
     curr = curr->next;
