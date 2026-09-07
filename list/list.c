@@ -162,7 +162,23 @@ elem list_remove_from_front(list_t *l) {
   return val;
 }
 
-elem list_remove_at_index(list_t *l, int index) { return -1; }
+elem list_remove_at_index(list_t *l, int index) {
+  if (l == NULL || l->head == NULL || index < 0) return -1;
+  if (index == 0) return list_remove_from_front(l);
+
+  node_t *curr = l->head;
+  for (int i = 0; curr->next != NULL && i < index - 1; i++) {
+    curr = curr->next;
+  }
+
+  if (curr->next == NULL) return -1; // Out of bounds
+
+  node_t *temp = curr->next;
+  elem val = temp->value;
+  curr->next = temp->next;
+  free(temp);
+  return val;
+}
 
 bool list_is_in(list_t *l, elem value) {
   if (l == NULL) return false;
