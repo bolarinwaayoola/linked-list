@@ -8,18 +8,24 @@ int main() {
   printf("Write your Tests for your linked list implementation\n");
   list_t *mylist;
   mylist = list_alloc();
-  list_print(mylist);
-  list_add_to_front(mylist, 10);
-  list_add_to_front(mylist, 20);
-  list_add_to_front(mylist, 30);
-  list_print(mylist);
-  list_add_to_front(mylist, 40);
-  list_add_to_front(mylist, 50);
-  list_add_to_front(mylist, 60);
-  list_add_to_front(mylist, 70);
-  list_add_to_front(mylist, 80);
-  list_add_to_front(mylist, 90);
-  list_add_to_front(mylist, 100);
+
+  // Empty lists
+  if (list_length(mylist) != 0) printf("FAIL: Empty list length != 0\n");
+  if (list_get_elem_at(mylist, 1) != -1) printf("FAIL: get on empty list != -1\n");
+  if (list_remove_from_front(mylist) != -1) printf("FAIL: remove front on empty list != -1\n");
+  if (list_remove_from_back(mylist) != -1) printf("FAIL: remove back on empty list != -1\n");
+  if (list_is_in(mylist, 10)) printf("FAIL: is_in on empty list returned true\n");
+
+  //test 2 (add to front 100 down to 10)
+  for (int val = 10; val <= 100; val += 10) {
+      list_add_to_front(mylist, val);
+    }
+
+  char *str = listToString(mylist);
+  if (strcmp("100->90->80->70->60->50->40->30->20->10->NULL", str) != 0) {
+    printf("FAIL: list_add_to_front mismatch. Got: %s\n", str);
+  }
+  free(str);
 
   if(strcmp("100->90->80->70->60->50->40->30->20->10->NULL",listToString(mylist)) != 0)
   {
@@ -46,7 +52,30 @@ int main() {
   {
         printf("list_remove_at_index : FAILED\n");
   }
-  
+
+  // test: list_add_at_index & list_free
+  printf("\n--- Testing list_add_at_index & list_free ---\n");
+  list_t *test_list = list_alloc();
+
+  // Insert at index 1 on an empty list
+  list_add_at_index(test_list, 50, 1); // 50->NULL
+  // Insert at index 1 to test new head insertion
+  list_add_at_index(test_list, 25, 1); // 25->50->NULL
+  // Insert in middle (index 2)
+  list_add_at_index(test_list, 35, 2); // 25->35->50->NULL
+  // Attempt invalid/out-of-bounds indices (should do nothing)
+  list_add_at_index(test_list, 999, 0);  // Invalid: < 1
+  list_add_at_index(test_list, 999, 10); // Invalid: out of bounds
+
+  char *ins_str = listToString(test_list);
+  if (strcmp("25->35->50->NULL", ins_str) != 0) {
+    printf("FAIL: list_add_at_index mismatch. Got: %s\n", ins_str);
+  } else {
+    printf("PASS: list_add_at_index works for head, middle, and invalid bounds\n");
+  }
+  free(ins_str);
+
+  list_free(test_list);  
 
   // printf("The list length is %d\n", list_length(mylist));
 
@@ -209,5 +238,6 @@ int main() {
   // list_add_to_back(mylist, 40);
   // list_print(mylist);
   // printf("Index of %d?: %d\n", 40, list_get_index_of(mylist, 40));
+  list_free(mylist);
   return 0;
 }
